@@ -3,10 +3,8 @@ resource_types:
   - name: rocketchat
     type: docker-image
     source:
-      #repository: michaellihs/rocket-notify-resource
       repository: michaellihs/rocket-notify-resource
-      tag: dev-1
-      channel: general
+      tag: dev-13
 
 resources:
   - name: rocketchat
@@ -15,12 +13,12 @@ resources:
       url: http://rocketchat:3000
       user: admin
       password: admin
-      channel: general
+      debug: 1
 
 jobs:
   - name: rocketchat-notify
     plan:
-      - task: notify
+      - task: successful-job
         config:
           platform: linux
           image_resource:
@@ -32,3 +30,23 @@ jobs:
               - hello world
         on_success:
           put: rocketchat
+          params:
+            channel: general
+            message: Job 'successful-job' succeeded
+      - task: failing-job
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source: {repository: busybox}
+          run:
+            path: ls
+            args:
+              - no_such_file
+        on_failure:
+          put: rocketchat
+          params:
+            channel: general
+            message: Job 'failing-notify' failed
+            put: rocketchat
+

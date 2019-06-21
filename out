@@ -1,32 +1,39 @@
 #!/bin/bash
 
 set -e
+set +x
+
+# for jq
+PATH=/usr/local/bin:$PATH
 
 cd "${1}"
 
 exec 3>&1 # make stdout available as fd 3 for the result
 exec 1>&2 # redirect all output to stderr for logging
 
-# todo add a debug setting - if debug: true --> set -x
-set +x
-# for jq
-PATH=/usr/local/bin:$PATH
-
 payload=$(mktemp /tmp/resource-in.XXXXXX)
-
 cat > "${payload}" <&0
+
+debug="$(jq -r '.source.debug // "false"' < "${payload}")"
+
+log() {
+    if [[ "${debug}" == "true" ]]; then
+        echo $1
+    fi
+}
+
+log_file() {
+    if [[ "${debug}" == "true" ]]; then
+        cat $1
+    fi
+}
 
 chat_url="$(jq -r '.source.url' < "${payload}")"
 user="$(jq -r '.source.user' < "${payload}")"
 password="$(jq -r '.source.password' < "${payload}")"
-channel="$(jq -r '.source.channel' < "${payload}")"
-#channel="$(jq -r '.params.channel' < "${payload}")"
+channel="$(jq -r '.params.channel' < "${payload}")"
 message="$(jq -r '.params.message' < "${payload}")"
 
-
-curl -X POST -k ${chat_url}/api/v1/login -d "user=${user}&password=${password}" > rocket.chat.auth
-export chat_userId=$(cat rocket.chat.auth | jq -r '.data.userId')
-export chat_authToken=$(cat rocket.chat.auth | jq -r '.data.authToken')
 
 body="$(cat <<EOF
 {
@@ -34,26 +41,43 @@ body="$(cat <<EOF
   "text": "${message}"
 }
 EOF
-  )"
-send_data="$(echo "${body}" | jq -c '.')"
+)"
 
-echo ${send_data}
+debug_info=""
 
-curl -H "X-Auth-Token: ${chat_authToken}" -H "X-User-Id: ${chat_userId}" -H "Content-type:application/json" -k ${chat_url}/api/v1/chat.postMessage -d "${send_data}"
-
-metadata="$(cat <<EOF
+# check whether we really want to send messages or just running tests (debug)
+if [[ "${debug}" == "true" ]]; then
+    metadata="$(cat <<EOF
 {
   "metadata": [
-    {"name": "url",               "value": "${chat_url}"},
-    {"name": "channel",           "value": "${channel}"          },
-    {"name": "user",          "value": "${user}"            },
-    {"name": "text",              "value": "${message}"                }
+    {"name": "url",     "value": "${chat_url}"},
+    {"name": "channel", "value": "${channel}"},
+    {"name": "user",    "value": "${user}"},
+    {"name": "text",    "value": "${message}"}
   ]
 }
 EOF
-  )"
+    )"
+    debug_info="$(cat <<EOF
+{
+    "url": "${chat_url}",
+    "body": ${body}
+}
+EOF
+    )"
+else
+    send_data="$(echo "${body}" | jq -c '.')"
 
-#echo ${metadata}
+    echo ${send_data}
+
+    curl -s -X POST -k ${chat_url}/api/v1/login -d "user=${user}&password=${password}" > rocket.chat.auth
+    export chat_userId=$(cat rocket.chat.auth | jq -r '.data.userId')
+    export chat_authToken=$(cat rocket.chat.auth | jq -r '.data.authToken')
+
+    curl -s -H "X-Auth-Token: ${chat_authToken}" -H "X-User-Id: ${chat_userId}" -H "Content-type:application/json" -k ${chat_url}/api/v1/chat.postMessage -d "${send_data}"
+fi
 
 timestamp="$(jq -n "{version:{timestamp:\"$(date +%s)\"}}")"
-echo "$timestamp $metadata " | jq -s add  >&3
+
+# send actual result to &3 since this is redirected to &1
+echo "$timestamp $debug_info $metadata " | jq -s add  >&3

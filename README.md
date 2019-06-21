@@ -10,6 +10,9 @@ The repository is based on a fork from [github.com/lucirr/rocketchat-notificatio
 
 ## Contents
 - [Resource Configuration](#resource-configuration)
+- [Configuration Parameters](#configuration-parameters)
+    - [Within the `resources` Section](#within-the-resources-section)
+    - [Within the `jobs.plan.on_success|on_failure` section](#within-the-jobsplanon_successon_failure-section)
 - [Developer's Guide](#developers-guide)
     - [Spinning up a local Development Environment with `docker-compose`](#spinning-up-a-local-development-environment-with-docker-compose)
         - [Generating Keys for Concourse](#generating-keys-for-concourse)
@@ -21,7 +24,7 @@ The repository is based on a fork from [github.com/lucirr/rocketchat-notificatio
 Resource Configuration
 ----------------------
 
-(draft)
+Here is a sample usage of the RocketChat notification resource
 
 ```yaml
 resource_types:
@@ -38,8 +41,44 @@ resources:
     url: https://rocketchat:3000  
     user: concourse-caas
     password: t0p-s3cr3t
-    channel: general
+
+jobs:
+  - name: rocketchat-notify
+    plan:
+      - task: notify
+        # ...
+        on_success:
+          put: rocketchat
+          params:
+            channel: general
+            text: Job 'rocketchat-notify' was successfully triggered
+        on_failure:
+          put: rocketchat
+          params:
+            channel: general
+            message: Job 'rocketchat-notify' failed
+            put: rocketchat
 ```
+
+
+## Configuration Parameters
+
+### Within the `resources` Section
+
+| Parameter  | Type   | Required | Default | Description                                                       |
+|:-----------|:-------|:---------|:--------|:------------------------------------------------------------------|
+| `url`      | URL    | yes      |         | URL of the RocketChat server to send notifications to             |
+| `user`     | String | yes      |         | Username with which Concourse authenticates at RocketChat         |
+| `password` | String | yes      |         | Password with which Concourse authenticates at RocketChat         |
+| `debug`    | String | no       | `false` | If set to `true`, the resource will output only debug information |
+
+
+### Within the `jobs.plan.on_success|on_failure` section
+
+| Parameter | Type   | Required | Default | Description                                                       |
+|:----------|:-------|:---------|:--------|:------------------------------------------------------------------|
+| `channel` | String | yes      |         | The RocketChat channel where Concourse sends its notifications to |
+| `message` | String | yes      |         | The message send to RocketChat                                    |
 
 
 Developer's Guide
@@ -122,6 +161,7 @@ root@f39bb0c9da87:/concourse-keys# cp worker_key.pub authorized_worker_keys
 Resources
 ---------
 
+* [Concourse Documentation on Developing Custom Resource Types](https://concourse-ci.org/implementing-resource-types.html)
 * [Developing a custom Concourse Resource](https://content.pivotal.io/blog/developing-a-custom-concourse-resource)
 * [RocketChat and Docker Compose](https://rocket.chat/docs/installation/docker-containers/index.html)
 
