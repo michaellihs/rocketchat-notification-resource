@@ -2,6 +2,6 @@
 *.iml
 
 # ignore data directories from containerized RocketChat
-dev/uploads/
-dev/data/
-dev/runtime/
+dev/rocket-chat/uploads/
+dev/rocket-chat/data/
+dev/rocket-chat/runtime/

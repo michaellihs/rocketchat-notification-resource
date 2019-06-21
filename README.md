@@ -46,14 +46,15 @@ This section follows the [official RocketChat documentation for containerized se
     127.0.0.1       chat.dev.localhost
     ```
 
-3. `cd` into the `dev` directory and use the provided shell script to spin up RocketChat
+3. `cd` into the `dev/rocket-chat` directory and use the provided shell script to spin up RocketChat
 
     ```
-    cd dev
+    cd dev/rocket-chat
     ./rocketchat-up.sh
     ```
 
-4. The RocketChat URL should open up in your browser.
+4. After a while the RocketChat URL should open up in your browser. You can login with user `admin` password `admin`
+5. Provide some organization information and you are good to go.
 
 
 ### Building the image for the resource
