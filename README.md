@@ -3,7 +3,19 @@ Concourse Resource for RocketChat Notifications
 
 This project contains a Concourse Resource for sending notifications to RocketChat.
 
-The repository is a fork from [github.com/lucirr/rocketchat-notification-resource](https://github.com/lucirr/rocketchat-notification-resource).
+The repository is based on a fork from [github.com/lucirr/rocketchat-notification-resource](https://github.com/lucirr/rocketchat-notification-resource).
+
+
+[TOC levels=4]: # "## Contents"
+
+## Contents
+- [Resource Configuration](#resource-configuration)
+- [Developer's Guide](#developers-guide)
+    - [Spinning up a local Development Environment with `docker-compose`](#spinning-up-a-local-development-environment-with-docker-compose)
+        - [Generating Keys for Concourse](#generating-keys-for-concourse)
+    - [Building and pushing the Docker Image for the Resource](#building-and-pushing-the-docker-image-for-the-resource)
+    - [Troubleshooting & Debugging](#troubleshooting--debugging)
+- [Resources](#resources)
 
 
 Resource Configuration
@@ -16,18 +28,19 @@ resource_types:
 - name: rocketchat
   type: docker-image
   source:
-    repository: rb-bic-artifactory.de.bosch.com/caasbic/concourse-rocketchat-notification-resource
-    # tag: 0.0.1
+    repository: michaellihs/rocket-notify-resource
+    tag: dev-1
 
 resources:
 - name: rocketchat
   type: rocketchat
   source:
-    url: https://chatops.devtools.int.us1.bosch-iot-cloud.com  
+    url: https://rocketchat:3000  
     user: concourse-caas
     password: t0p-s3cr3t
-    channel: 'lalaland'
+    channel: general
 ```
+
 
 Developer's Guide
 -----------------
@@ -35,15 +48,14 @@ Developer's Guide
 This section provides some information for those who want to join development on this resource.
 
 
-### Spinning up a local RocketChat with `docker-compose`
+### Spinning up a local Development Environment with `docker-compose`
 
-This section follows the [official RocketChat documentation for containerized setups](https://rocket.chat/docs/installation/docker-containers/index.html).
 
 1. Make sure to have Docker and Docker Compose installed on your workstation
 2. Create a host entry in your `/etc/hosts` file
 
     ```
-    127.0.0.1       chat.dev.localhost
+    127.0.0.1       chat.dev.localhost concourse.dev.localhost
     ```
 
 3. `cd` into the `dev/rocket-chat` directory and use the provided shell script to spin up RocketChat
@@ -55,31 +67,20 @@ This section follows the [official RocketChat documentation for containerized se
 
 4. After a while the RocketChat URL should open up in your browser. You can login with user `admin` password `admin`
 5. Provide some organization information and you are good to go.
-
-
-### Spinning up a local Concourse with `docker-compose`
-
-1. Make sure you have Docker and Docker Compose installed on your workstation
-2. Create a host entry in your ´/etc/hosts´ file
-
-    ```
-    127.0.0.1	concourse.dev.localhost
-    ```
-
-3. `cd` into the `dev/concourse` directory and use the provided shell script to spin up Concourse
+6. `cd` into the `dev/concourse` directory and use the provided shell script to spin up Concourse
 
     ```
     cd dev/concourse
     ./concourse-up.sh
     ```
 
-4. You can login to Concourse with user `test` and password `test`
+7. After a while, Concourse should open up in your browser. You can login to Concourse with user `test` and password `test`
 
 
 > **Warning**: For convenience, this repository comes with a set of default keys used by Concourse. Make sure to re-create those keys if you want to run Concourse in a more production setup.
 
 
-#### Generating Keys
+#### Generating Keys for Concourse
 
 Follow steps in https://concourse-ci.org/concourse-generate-key.html
 
@@ -101,19 +102,26 @@ root@f39bb0c9da87:/concourse-keys# cp worker_key.pub authorized_worker_keys
 ```
 
 
-### Building the image for the resource
-
-
-On a workstation that does not require a proxy, run
+### Building and pushing the Docker Image for the Resource
 
 ```bash
-docker build -t rb-bic-artifactory.de.bosch.com/caasbic/concourse-rocketchat-notification-resource .
-docker push rb-bic-artifactory.de.bosch.com/caasbic/concourse-rocketchat-notification-resource
+./build.sh VERSION REPOSITORY
 ```
+
+
+### Troubleshooting & Debugging
+
+* hijacking the resource container in the dev pipeline
+
+    ```bash
+    cd dev
+    ./fly -t rocket-notify hijack -j rocket-notify-dev/rocketchat-notify -c rocket-notify-dev/rocketchat
+    ```
 
 
 Resources
 ---------
 
-* https://content.pivotal.io/blog/developing-a-custom-concourse-resource
+* [Developing a custom Concourse Resource](https://content.pivotal.io/blog/developing-a-custom-concourse-resource)
+* [RocketChat and Docker Compose](https://rocket.chat/docs/installation/docker-containers/index.html)
 

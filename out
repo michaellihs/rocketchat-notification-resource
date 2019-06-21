@@ -7,6 +7,7 @@ cd "${1}"
 exec 3>&1 # make stdout available as fd 3 for the result
 exec 1>&2 # redirect all output to stderr for logging
 
+# todo add a debug setting - if debug: true --> set -x
 set +x
 # for jq
 PATH=/usr/local/bin:$PATH
@@ -18,7 +19,8 @@ cat > "${payload}" <&0
 chat_url="$(jq -r '.source.url' < "${payload}")"
 user="$(jq -r '.source.user' < "${payload}")"
 password="$(jq -r '.source.password' < "${payload}")"
-channel="$(jq -r '.params.channel' < "${payload}")"
+channel="$(jq -r '.source.channel' < "${payload}")"
+#channel="$(jq -r '.params.channel' < "${payload}")"
 message="$(jq -r '.params.message' < "${payload}")"
 
 
