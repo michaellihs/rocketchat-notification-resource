@@ -57,6 +57,50 @@ This section follows the [official RocketChat documentation for containerized se
 5. Provide some organization information and you are good to go.
 
 
+### Spinning up a local Concourse with `docker-compose`
+
+1. Make sure you have Docker and Docker Compose installed on your workstation
+2. Create a host entry in your ´/etc/hosts´ file
+
+    ```
+    127.0.0.1	concourse.dev.localhost
+    ```
+
+3. `cd` into the `dev/concourse` directory and use the provided shell script to spin up Concourse
+
+    ```
+    cd dev/concourse
+    ./concourse-up.sh
+    ```
+
+4. You can login to Concourse with user `test` and password `test`
+
+
+> **Warning**: For convenience, this repository comes with a set of default keys used by Concourse. Make sure to re-create those keys if you want to run Concourse in a more production setup.
+
+
+#### Generating Keys
+
+Follow steps in https://concourse-ci.org/concourse-generate-key.html
+
+```
+root@f39bb0c9da87:/usr/local/concourse/bin# cd /concourse-keys/
+root@f39bb0c9da87:/concourse-keys# /usr/local/concourse/bin/concourse generate-key -t ssh -f ./worker_key
+wrote private key to ./worker_key
+wrote ssh public key to ./worker_key.pub
+root@f39bb0c9da87:/concourse-keys# cd /concourse-keys && /usr/local/concourse/bin/concourse generate-key -t ssh -f ./worker_key
+wrote private key to ./worker_key
+wrote ssh public key to ./worker_key.pub
+root@f39bb0c9da87:/concourse-keys# cd /concourse-keys && /usr/local/concourse/bin/concourse generate-key -t ssh -f ./tsa_host_key
+wrote private key to ./tsa_host_key
+wrote ssh public key to ./tsa_host_key.pub
+root@f39bb0c9da87:/concourse-keys# cd /concourse-keys && /usr/local/concourse/bin/concourse generate-key -t ssh -f ./session_signing_key
+wrote private key to ./session_signing_key
+wrote ssh public key to ./session_signing_key.pub
+root@f39bb0c9da87:/concourse-keys# cp worker_key.pub authorized_worker_keys
+```
+
+
 ### Building the image for the resource
 
 
