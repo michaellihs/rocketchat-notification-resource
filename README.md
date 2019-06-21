@@ -23,15 +23,41 @@ resources:
 - name: rocketchat
   type: rocketchat
   source:
-    url: http://rocket-chat.your-company.com  
-    user: rocket-chat-user
+    url: https://chatops.devtools.int.us1.bosch-iot-cloud.com  
+    user: concourse-caas
     password: t0p-s3cr3t
     channel: 'lalaland'
 ```
 
+Developer's Guide
+-----------------
 
-Building the image for the resource
------------------------------------
+This section provides some information for those who want to join development on this resource.
+
+
+### Spinning up a local RocketChat with `docker-compose`
+
+This section follows the [official RocketChat documentation for containerized setups](https://rocket.chat/docs/installation/docker-containers/index.html).
+
+1. Make sure to have Docker and Docker Compose installed on your workstation
+2. Create a host entry in your `/etc/hosts` file
+
+    ```
+    127.0.0.1       chat.dev.localhost
+    ```
+
+3. `cd` into the `dev` directory and use the provided shell script to spin up RocketChat
+
+    ```
+    cd dev
+    ./rocketchat-up.sh
+    ```
+
+4. The RocketChat URL should open up in your browser.
+
+
+### Building the image for the resource
+
 
 On a workstation that does not require a proxy, run
 

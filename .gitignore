@@ -1,2 +1,7 @@
 .idea/
 *.iml
+
+# ignore data directories from containerized RocketChat
+dev/uploads/
+dev/data/
+dev/runtime/
