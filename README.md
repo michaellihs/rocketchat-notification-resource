@@ -75,10 +75,11 @@ jobs:
 
 ### Within the `jobs.plan.on_success|on_failure` section
 
-| Parameter | Type   | Required | Default | Description                                                       |
-|:----------|:-------|:---------|:--------|:------------------------------------------------------------------|
-| `channel` | String | yes      |         | The RocketChat channel where Concourse sends its notifications to |
-| `message` | String | yes      |         | The message send to RocketChat                                    |
+| Parameter | Type   | Required | Default     | Description                                                        |
+|:----------|:-------|:---------|:------------|:-------------------------------------------------------------------|
+| `channel` | String | yes      |             | The RocketChat channel where Concourse sends its notifications to  |
+| `message` | String | yes      |             | The message send to RocketChat                                     |
+| `alias`   | String | no       | `Concourse` | The use alias with which Concourse sends the message to RocketChat |
 
 
 Developer's Guide
@@ -164,4 +165,4 @@ Resources
 * [Concourse Documentation on Developing Custom Resource Types](https://concourse-ci.org/implementing-resource-types.html)
 * [Developing a custom Concourse Resource](https://content.pivotal.io/blog/developing-a-custom-concourse-resource)
 * [RocketChat and Docker Compose](https://rocket.chat/docs/installation/docker-containers/index.html)
-
+* [RocketChat REST API](https://rocket.chat/docs/developer-guides/rest-api/)

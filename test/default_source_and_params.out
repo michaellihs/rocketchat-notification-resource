@@ -7,6 +7,7 @@
   },
   "params": {
     "channel": "general",
-    "message": "test message"
+    "message": "test message",
+    "alias": "Concourse"
   }
 }

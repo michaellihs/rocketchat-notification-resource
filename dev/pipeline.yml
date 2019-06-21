@@ -4,7 +4,7 @@ resource_types:
     type: docker-image
     source:
       repository: michaellihs/rocket-notify-resource
-      tag: dev-13
+      tag: dev-20
 
 resources:
   - name: rocketchat
@@ -33,6 +33,7 @@ jobs:
           params:
             channel: general
             message: Job 'successful-job' succeeded
+            alias: Concourse-Success
       - task: failing-job
         config:
           platform: linux
@@ -48,5 +49,5 @@ jobs:
           params:
             channel: general
             message: Job 'failing-notify' failed
-            put: rocketchat
+            alias: Concourse-Fail
 

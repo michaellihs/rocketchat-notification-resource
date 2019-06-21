@@ -33,12 +33,22 @@ user="$(jq -r '.source.user' < "${payload}")"
 password="$(jq -r '.source.password' < "${payload}")"
 channel="$(jq -r '.params.channel' < "${payload}")"
 message="$(jq -r '.params.message' < "${payload}")"
-
+alias="$(jq -r '.params.alias' < "${payload}")"
+# TODO fix the default here
+alias=${alias:-Concourse}
 
 body="$(cat <<EOF
 {
-  "channel": "${channel}",
-  "text": "${message}"
+  "attachments": [
+      {
+          "title":      "${BUILD_TEAM_NAME}/pipelines/${BUILD_PIPELINE_NAME}/jobs/${BUILD_JOB_NAME}",
+          "title_link": "${ATC_EXTERNAL_URL}/teams/${BUILD_TEAM_NAME}/pipelines/${BUILD_PIPELINE_NAME}/jobs/${BUILD_JOB_NAME}/builds/${BUILD_NAME}"
+      }
+  ],
+  "channel":    "${channel}",
+  "text":       "${message}",
+  "avatar":     "https://concourse-ci.org/images/trademarks/concourse-black.png",
+  "alias":      "${alias}"
 }
 EOF
 )"
@@ -67,8 +77,6 @@ EOF
     )"
 else
     send_data="$(echo "${body}" | jq -c '.')"
-
-    echo ${send_data}
 
     curl -s -X POST -k ${chat_url}/api/v1/login -d "user=${user}&password=${password}" > rocket.chat.auth
     export chat_userId=$(cat rocket.chat.auth | jq -r '.data.userId')
