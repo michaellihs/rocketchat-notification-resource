@@ -6,6 +6,9 @@ CURR_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 sudo mkdir -p ${CURR_DIR}/runtime/db
 sudo mkdir -p ${CURR_DIR}/dump
 
+docker network inspect rocket-notify &>/dev/null ||
+    docker network create --driver bridge rocket-notify
+
 docker-compose up -d
 
 until curl -f -s --noproxy ${ROOT_URL} "http://${ROOT_URL}:3000" > /dev/null

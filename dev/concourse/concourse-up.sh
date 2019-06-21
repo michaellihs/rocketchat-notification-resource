@@ -3,6 +3,9 @@
 export CONCOURSE_FQDN='concourse.dev.localhost'
 CURR_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
+docker network inspect rocket-notify &>/dev/null ||
+    docker network create --driver bridge rocket-notify
+
 docker-compose up -d
 
 until curl -f -s --noproxy ${CONCOURSE_FQDN} "http://${CONCOURSE_FQDN}:8080" > /dev/null

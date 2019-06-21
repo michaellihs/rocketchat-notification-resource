@@ -3,13 +3,15 @@ version: '2'
 services:
   rocketchat:
     image: rocket.chat:latest
+    networks:
+      - rocket-notify
     command: bash -c 'for i in `seq 1 30`; do node main.js && s=$$? && break || s=$$?; echo "Tried $$i times. Waiting 5 secs..."; sleep 5; done; (exit $$s)'
     restart: unless-stopped
     volumes:
       - ./uploads:/app/uploads
     environment:
       - PORT=3000
-      - ROOT_URL=http://${ROOT_URL}
+      - ROOT_URL=http://${ROOT_URL}:3000
       - MONGO_URL=mongodb://mongo:27017/rocketchat
       - MONGO_OPLOG_URL=mongodb://mongo:27017/local
       #- Accounts_UseDNSDomainCheck=True
@@ -24,6 +26,8 @@ services:
 
   mongo:
     image: mongo
+    networks:
+      - rocket-notify
     restart: unless-stopped
     volumes:
       - ./data/db:/data/db
@@ -34,6 +38,8 @@ services:
   # it will run the command and remove himself (it will not stay running)
   mongo-init-replica:
     image: mongo
+    networks:
+      - rocket-notify
     command: 'bash -c "for i in `seq 1 30`; do mongo mongo/rocketchat --eval \"rs.initiate({ _id: ''rs0'', members: [ { _id: 0, host: ''localhost:27017'' } ]})\" && s=$$? && break || s=$$?; echo \"Tried $$i times. Waiting 5 secs...\"; sleep 5; done; (exit $$s)"'
     depends_on:
       - mongo
@@ -57,3 +63,8 @@ services:
 #    # this is used to expose the hubot port for notifications on the host on port 3001, e.g. for hubot-jenkins-notifier
 #    ports:
 #      - 3001:8080
+
+
+networks:
+  rocket-notify:
+    external: true
