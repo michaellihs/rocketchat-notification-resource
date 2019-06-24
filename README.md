@@ -9,10 +9,11 @@ The repository is based on a fork from [github.com/lucirr/rocketchat-notificatio
 [TOC levels=4]: # "## Contents"
 
 ## Contents
-- [Resource Configuration](#resource-configuration)
-- [Configuration Parameters](#configuration-parameters)
-    - [Within the `resources` Section](#within-the-resources-section)
-    - [Within the `jobs.plan.on_success|on_failure` section](#within-the-jobsplanon_successon_failure-section)
+- [Resource Usage](#resource-usage)
+    - [Sample Pipeline](#sample-pipeline)
+    - [Resource Configuration](#resource-configuration)
+        - [Within the `resources.type:rocketchat.source` Section](#within-the-resourcestyperocketchatsource-section)
+        - [Within the `jobs.plan.task.on_success|on_failure` section](#within-the-jobsplantaskon_successon_failure-section)
 - [Developer's Guide](#developers-guide)
     - [Spinning up a local Development Environment with `docker-compose`](#spinning-up-a-local-development-environment-with-docker-compose)
         - [Generating Keys for Concourse](#generating-keys-for-concourse)
@@ -22,8 +23,10 @@ The repository is based on a fork from [github.com/lucirr/rocketchat-notificatio
 - [Resources](#resources)
 
 
-Resource Configuration
-----------------------
+Resource Usage
+--------------
+
+### Sample Pipeline
 
 Here is a sample usage of the RocketChat notification resource
 
@@ -62,9 +65,9 @@ jobs:
 ```
 
 
-## Configuration Parameters
+### Resource Configuration
 
-### Within the `resources` Section
+#### Within the `resources.type:rocketchat.source` Section
 
 | Parameter  | Type   | Required | Default | Description                                                       |
 |:-----------|:-------|:---------|:--------|:------------------------------------------------------------------|
@@ -74,7 +77,7 @@ jobs:
 | `debug`    | String | no       | `false` | If set to `true`, the resource will output only debug information |
 
 
-### Within the `jobs.plan.on_success|on_failure` section
+#### Within the `jobs.plan.task.on_success|on_failure` section
 
 | Parameter | Type   | Required | Default     | Description                                                        |
 |:----------|:-------|:---------|:------------|:-------------------------------------------------------------------|
