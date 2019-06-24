@@ -8,6 +8,6 @@
   "params": {
     "channel": "general",
     "message": "test message",
-    "alias": "Concourse"
+    "alias": "Concourse-Success"
   }
 }

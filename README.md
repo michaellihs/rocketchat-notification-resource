@@ -16,6 +16,7 @@ The repository is based on a fork from [github.com/lucirr/rocketchat-notificatio
 - [Developer's Guide](#developers-guide)
     - [Spinning up a local Development Environment with `docker-compose`](#spinning-up-a-local-development-environment-with-docker-compose)
         - [Generating Keys for Concourse](#generating-keys-for-concourse)
+    - [Running the Tests](#running-the-tests)
     - [Building and pushing the Docker Image for the Resource](#building-and-pushing-the-docker-image-for-the-resource)
     - [Troubleshooting & Debugging](#troubleshooting--debugging)
 - [Resources](#resources)
@@ -142,6 +143,18 @@ root@f39bb0c9da87:/concourse-keys# cp worker_key.pub authorized_worker_keys
 ```
 
 
+### Running the Tests
+
+The resource ships with a bunch of integration tests, in order to run them:
+
+```bash
+cd test
+./all.sh
+```
+
+The tests are also part of the `Dockerfile` and will run with every build of the image. Build will fail if tests fail.
+
+
 ### Building and pushing the Docker Image for the Resource
 
 ```bash
@@ -164,5 +177,6 @@ Resources
 
 * [Concourse Documentation on Developing Custom Resource Types](https://concourse-ci.org/implementing-resource-types.html)
 * [Developing a custom Concourse Resource](https://content.pivotal.io/blog/developing-a-custom-concourse-resource)
+* [Slack Resource for Concourse](https://github.com/cloudfoundry-community/slack-notification-resource)
 * [RocketChat and Docker Compose](https://rocket.chat/docs/installation/docker-containers/index.html)
 * [RocketChat REST API](https://rocket.chat/docs/developer-guides/rest-api/)

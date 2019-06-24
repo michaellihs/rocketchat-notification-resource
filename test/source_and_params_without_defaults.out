@@ -1,0 +1,12 @@
+{
+  "source": {
+    "url": "http://rocketchat:3000",
+    "user": "admin",
+    "password": "password",
+    "debug": "true"
+  },
+  "params": {
+    "channel": "general",
+    "message": "test message"
+  }
+}

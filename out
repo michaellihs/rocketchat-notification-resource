@@ -34,8 +34,8 @@ password="$(jq -r '.source.password' < "${payload}")"
 channel="$(jq -r '.params.channel' < "${payload}")"
 message="$(jq -r '.params.message' < "${payload}")"
 alias="$(jq -r '.params.alias' < "${payload}")"
-# TODO fix the default here
-alias=${alias:-Concourse}
+
+if [[ "${alias}" == "null" ]]; then alias='Concourse'; fi
 
 body="$(cat <<EOF
 {

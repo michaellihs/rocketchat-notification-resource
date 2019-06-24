@@ -51,7 +51,16 @@ debug='1'
 channel='general'
 message='test message'
 
-test 'default_source_and_params' | jq -e "
+test 'all_source_and_params' | jq -e "
+    .url == $(echo $url | jq -R .) and
+    .body.channel == $(echo $channel | jq -R .) and
+    .body.text == $(echo $message | jq -R .) and
+    .body.alias == $(echo 'Concourse-Success' | jq -R .) and
+    .body.attachments[0].title == $(echo ${BUILD_TEAM_NAME}/pipelines/${BUILD_PIPELINE_NAME}/jobs/${BUILD_JOB_NAME} | jq -R .) and
+    .body.attachments[0].title_link == $(echo ${ATC_EXTERNAL_URL}/teams/${BUILD_TEAM_NAME}/pipelines/${BUILD_PIPELINE_NAME}/jobs/${BUILD_JOB_NAME}/builds/${BUILD_NAME} | jq -R .) and
+    .body.avatar == $(echo 'https://concourse-ci.org/images/trademarks/concourse-black.png' | jq -R .)"
+
+test 'source_and_params_without_defaults' | jq -e "
     .url == $(echo $url | jq -R .) and
     .body.channel == $(echo $channel | jq -R .) and
     .body.text == $(echo $message | jq -R .) and
@@ -59,5 +68,3 @@ test 'default_source_and_params' | jq -e "
     .body.attachments[0].title == $(echo ${BUILD_TEAM_NAME}/pipelines/${BUILD_PIPELINE_NAME}/jobs/${BUILD_JOB_NAME} | jq -R .) and
     .body.attachments[0].title_link == $(echo ${ATC_EXTERNAL_URL}/teams/${BUILD_TEAM_NAME}/pipelines/${BUILD_PIPELINE_NAME}/jobs/${BUILD_JOB_NAME}/builds/${BUILD_NAME} | jq -R .) and
     .body.avatar == $(echo 'https://concourse-ci.org/images/trademarks/concourse-black.png' | jq -R .)"
-
-# TODO add another test, that leaves all the "default" values empty and check, whether they are set as expected
