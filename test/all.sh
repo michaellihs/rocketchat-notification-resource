@@ -6,6 +6,7 @@ on_exit() {
   exitcode=$?
   if [ $exitcode != 0 ] ; then
     echo -e '\e[41;33;1m'"Failure encountered!"'\e[0m'
+    exit ${exitcode}
   fi
 }
 
