@@ -12,13 +12,14 @@ The repository is based on a fork from [github.com/lucirr/rocketchat-notificatio
 - [Resource Usage](#resource-usage)
     - [Sample Pipeline](#sample-pipeline)
     - [Resource Configuration](#resource-configuration)
-        - [Within the `resources.type:rocketchat.source` Section](#within-the-resourcestyperocketchatsource-section)
-        - [Within the `jobs.plan.task.on_success|on_failure` section](#within-the-jobsplantaskon_successon_failure-section)
+        - [The `resources.type:rocketchat.source` Section](#the-resourcestyperocketchatsource-section)
+        - [The `jobs.plan.task.on_success|on_failure` section](#the-jobsplantaskon_successon_failure-section)
 - [Developer's Guide](#developers-guide)
     - [Spinning up a local Development Environment with `docker-compose`](#spinning-up-a-local-development-environment-with-docker-compose)
         - [Generating Keys for Concourse](#generating-keys-for-concourse)
     - [Running the Tests](#running-the-tests)
     - [Building and pushing the Docker Image for the Resource](#building-and-pushing-the-docker-image-for-the-resource)
+    - [Setting up the CI Pipeline for the Resource](#setting-up-the-ci-pipeline-for-the-resource)
     - [Troubleshooting & Debugging](#troubleshooting--debugging)
 - [Resources](#resources)
 
@@ -67,7 +68,7 @@ jobs:
 
 ### Resource Configuration
 
-#### Within the `resources.type:rocketchat.source` Section
+#### The `resources.type:rocketchat.source` Section
 
 | Parameter  | Type   | Required | Default | Description                                                       |
 |:-----------|:-------|:---------|:--------|:------------------------------------------------------------------|
@@ -77,7 +78,7 @@ jobs:
 | `debug`    | String | no       | `false` | If set to `true`, the resource will output only debug information |
 
 
-#### Within the `jobs.plan.task.on_success|on_failure` section
+#### The `jobs.plan.task.on_success|on_failure` section
 
 | Parameter | Type   | Required | Default     | Description                                                        |
 |:----------|:-------|:---------|:------------|:-------------------------------------------------------------------|
