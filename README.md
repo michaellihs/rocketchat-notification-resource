@@ -165,6 +165,22 @@ The tests are also part of the `Dockerfile` and will run with every build of the
 ```
 
 
+### Setting up the CI Pipeline for the Resource
+
+The `ci` folder contains a Concourse pipeline that builds the resource and pushes it to a Docker registry.
+
+```bash
+cd ci
+export CONCOURSE_FQDN='http://your.concourse.server'
+export CONCOURSE_USER='concourse_username'
+export CONCOURSE_PASSWORD='concourse_p455w0rd'
+export DOCKER_REPO='yourdockerregistry'
+export DOCKER_USER='your_user_on_dockerhub'
+export DOCKER_PASSWORD='your_password_on_dockerhub'
+./setup-pipeline.sh
+```
+
+
 ### Troubleshooting & Debugging
 
 * hijacking the resource container in the dev pipeline
