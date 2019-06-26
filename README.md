@@ -71,13 +71,14 @@ jobs:
 
 #### The `resources.type:rocketchat.source` Section
 
-| Parameter  | Type   | Required | Default | Description                                                       |
-|:-----------|:-------|:---------|:--------|:------------------------------------------------------------------|
-| `url`      | URL    | yes      |         | URL of the RocketChat server to send notifications to             |
-| `user`     | String | yes      |         | Username with which Concourse authenticates at RocketChat         |
-| `password` | String | yes      |         | Password with which Concourse authenticates at RocketChat         |
-| `debug`    | String | no       | `false` | If set to `true`, the resource will output only debug information |
-| `channel`  | String | no       |         | Default channel to send messages to                               |
+| Parameter  | Type   | Required | Default     | Description                                                       |
+|:-----------|:-------|:---------|:------------|:------------------------------------------------------------------|
+| `url`      | URL    | yes      |             | URL of the RocketChat server to send notifications to             |
+| `user`     | String | yes      |             | Username with which Concourse authenticates at RocketChat         |
+| `password` | String | yes      |             | Password with which Concourse authenticates at RocketChat         |
+| `debug`    | String | no       | `false`     | If set to `true`, the resource will output only debug information |
+| `channel`  | String | no       |             | Default channel to send messages to                               |
+| `alias`    | String | no       | `Concourse` | Default alias to show in messages                                 |
 
 
 #### The `jobs.plan.task.on_success|on_failure` section
@@ -198,7 +199,7 @@ TODOs
 -----
 
 - [x] enable configuration of default channel in `resources.type:rocketchat.source`
-- [ ] enable configuration of default alias in `resources.type:rocketchat.source`
+- [x] enable configuration of default alias in `resources.type:rocketchat.source`
 - [ ] provide reasonable default message `Job 'rocketchat-notify' failed` with job name in title
 
 

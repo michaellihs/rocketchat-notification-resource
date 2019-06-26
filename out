@@ -35,8 +35,9 @@ channel="$(jq -r '.params.channel' < "${payload}")"
 message="$(jq -r '.params.message' < "${payload}")"
 alias="$(jq -r '.params.alias' < "${payload}")"
 
-if [[ "${alias}" == "null" ]]; then alias='Concourse'; fi
 if [[ "${channel}" == "null" ]]; then channel="$(jq -r '.source.channel' < "${payload}")"; fi
+if [[ "${alias}" == "null" ]]; then alias="$(jq -r '.source.alias' < "${payload}")"; fi
+if [[ "${alias}" == "null" ]]; then alias='Concourse'; fi
 
 body="$(cat <<EOF
 {
