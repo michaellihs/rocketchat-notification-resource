@@ -200,7 +200,7 @@ TODOs
 
 - [x] enable configuration of default channel in `resources.type:rocketchat.source`
 - [x] enable configuration of default alias in `resources.type:rocketchat.source`
-- [ ] provide reasonable default message `Job 'rocketchat-notify' failed` with job name in title
+- [x] provide reasonable default message `Job 'rocketchat-notify' failed` with job name in title
 
 
 Resources

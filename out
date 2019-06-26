@@ -37,7 +37,9 @@ alias="$(jq -r '.params.alias' < "${payload}")"
 
 if [[ "${channel}" == "null" ]]; then channel="$(jq -r '.source.channel' < "${payload}")"; fi
 if [[ "${alias}" == "null" ]]; then alias="$(jq -r '.source.alias' < "${payload}")"; fi
+if [[ "${message}" == "null" ]]; then message="Build ${BUILD_ID} of job '${BUILD_TEAM_NAME}/pipelines/${BUILD_PIPELINE_NAME}/jobs/${BUILD_JOB_NAME}' - click below to see the logs"; fi
 if [[ "${alias}" == "null" ]]; then alias='Concourse'; fi
+
 
 body="$(cat <<EOF
 {

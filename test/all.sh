@@ -38,6 +38,7 @@ EOM
 }
 
 # simulate environment as in executing the resource in Concourse
+export BUILD_ID=10
 export BUILD_PIPELINE_NAME='my-pipeline'
 export BUILD_JOB_NAME='my-job'
 export BUILD_NAME='my-build'
@@ -83,6 +84,16 @@ test 'alias_in_source_not_in_params' | jq -e "
     .body.channel == $(echo $channel | jq -R .) and
     .body.text == $(echo $message | jq -R .) and
     .body.alias == $(echo 'alias-in-source' | jq -R .) and
+    .body.attachments[0].title == $(echo ${BUILD_TEAM_NAME}/pipelines/${BUILD_PIPELINE_NAME}/jobs/${BUILD_JOB_NAME} | jq -R .) and
+    .body.attachments[0].title_link == $(echo ${ATC_EXTERNAL_URL}/teams/${BUILD_TEAM_NAME}/pipelines/${BUILD_PIPELINE_NAME}/jobs/${BUILD_JOB_NAME}/builds/${BUILD_NAME} | jq -R .) and
+    .body.avatar == $(echo 'https://concourse-ci.org/images/trademarks/concourse-black.png' | jq -R .)"
+
+expected_text="Build ${BUILD_ID} of job '${BUILD_TEAM_NAME}/pipelines/${BUILD_PIPELINE_NAME}/jobs/${BUILD_JOB_NAME}' - click below to see the logs"
+test 'default_message' | jq -e "
+    .url == $(echo $url | jq -R .) and
+    .body.channel == $(echo $channel | jq -R .) and
+    .body.text == \"${expected_text}\" and
+    .body.alias == $(echo 'Concourse' | jq -R .) and
     .body.attachments[0].title == $(echo ${BUILD_TEAM_NAME}/pipelines/${BUILD_PIPELINE_NAME}/jobs/${BUILD_JOB_NAME} | jq -R .) and
     .body.attachments[0].title_link == $(echo ${ATC_EXTERNAL_URL}/teams/${BUILD_TEAM_NAME}/pipelines/${BUILD_PIPELINE_NAME}/jobs/${BUILD_JOB_NAME}/builds/${BUILD_NAME} | jq -R .) and
     .body.avatar == $(echo 'https://concourse-ci.org/images/trademarks/concourse-black.png' | jq -R .)"
