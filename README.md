@@ -21,6 +21,7 @@ The repository is based on a fork from [github.com/lucirr/rocketchat-notificatio
     - [Building and pushing the Docker Image for the Resource](#building-and-pushing-the-docker-image-for-the-resource)
     - [Setting up the CI Pipeline for the Resource](#setting-up-the-ci-pipeline-for-the-resource)
     - [Troubleshooting & Debugging](#troubleshooting--debugging)
+- [TODOs](#todos)
 - [Resources](#resources)
 
 
@@ -56,13 +57,13 @@ jobs:
           put: rocketchat
           params:
             channel: general
-            text: Job 'rocketchat-notify' was successfully triggered
+            message: Job 'rocketchat-notify' was successfully triggered
         on_failure:
           put: rocketchat
           params:
             channel: general
             message: Job 'rocketchat-notify' failed
-            put: rocketchat
+            alias: Concourse-Rocketeer
 ```
 
 
@@ -76,6 +77,7 @@ jobs:
 | `user`     | String | yes      |         | Username with which Concourse authenticates at RocketChat         |
 | `password` | String | yes      |         | Password with which Concourse authenticates at RocketChat         |
 | `debug`    | String | no       | `false` | If set to `true`, the resource will output only debug information |
+| `channel`  | String | no       |         | Default channel to send messages to                               |
 
 
 #### The `jobs.plan.task.on_success|on_failure` section
@@ -190,6 +192,14 @@ export DOCKER_PASSWORD='your_password_on_dockerhub'
     cd dev
     ./fly -t rocket-notify hijack -j rocket-notify-dev/rocketchat-notify -c rocket-notify-dev/rocketchat
     ```
+
+
+TODOs
+-----
+
+- [x] enable configuration of default channel in `resources.type:rocketchat.source`
+- [ ] enable configuration of default alias in `resources.type:rocketchat.source`
+- [ ] provide reasonable default message `Job 'rocketchat-notify' failed` with job name in title
 
 
 Resources

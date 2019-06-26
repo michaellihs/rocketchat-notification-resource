@@ -1,0 +1,13 @@
+{
+  "source": {
+    "url": "http://rocketchat:3000",
+    "user": "admin",
+    "password": "password",
+    "debug": "true",
+    "channel": "in-source"
+  },
+  "params": {
+    "message": "test message",
+    "alias": "Concourse-Success"
+  }
+}

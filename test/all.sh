@@ -68,3 +68,12 @@ test 'source_and_params_without_defaults' | jq -e "
     .body.attachments[0].title == $(echo ${BUILD_TEAM_NAME}/pipelines/${BUILD_PIPELINE_NAME}/jobs/${BUILD_JOB_NAME} | jq -R .) and
     .body.attachments[0].title_link == $(echo ${ATC_EXTERNAL_URL}/teams/${BUILD_TEAM_NAME}/pipelines/${BUILD_PIPELINE_NAME}/jobs/${BUILD_JOB_NAME}/builds/${BUILD_NAME} | jq -R .) and
     .body.avatar == $(echo 'https://concourse-ci.org/images/trademarks/concourse-black.png' | jq -R .)"
+
+test 'channel_in_source_not_in_params' | jq -e "
+    .url == $(echo $url | jq -R .) and
+    .body.channel == $(echo 'in-source' | jq -R .) and
+    .body.text == $(echo $message | jq -R .) and
+    .body.alias == $(echo 'Concourse-Success' | jq -R .) and
+    .body.attachments[0].title == $(echo ${BUILD_TEAM_NAME}/pipelines/${BUILD_PIPELINE_NAME}/jobs/${BUILD_JOB_NAME} | jq -R .) and
+    .body.attachments[0].title_link == $(echo ${ATC_EXTERNAL_URL}/teams/${BUILD_TEAM_NAME}/pipelines/${BUILD_PIPELINE_NAME}/jobs/${BUILD_JOB_NAME}/builds/${BUILD_NAME} | jq -R .) and
+    .body.avatar == $(echo 'https://concourse-ci.org/images/trademarks/concourse-black.png' | jq -R .)"
