@@ -23,3 +23,5 @@ image_name='rocket-notify-resource'
 docker build --no-cache -t ${image_name} .
 docker tag ${image_name} ${repo}/${image_name}:${version}
 docker push ${repo}/${image_name}:${version}
+git tag -a ${version} -m "Docker image version ${version}"
+git push origin --follow-tags
