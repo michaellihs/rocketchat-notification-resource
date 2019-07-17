@@ -106,23 +106,16 @@ This section provides some information for those who want to join development on
     127.0.0.1       chat.dev.localhost concourse.dev.localhost
     ```
 
-3. `cd` into the `dev/rocket-chat` directory and use the provided shell script to spin up RocketChat
+3. `cd` into the `dev` directory and use the provided shell script to spin up RocketChat
 
     ```
-    cd dev/rocket-chat
-    ./rocketchat-up.sh
-    ```
-
-4. After a while the RocketChat URL should open up in your browser. You can login with user `admin` password `admin`
-5. Provide some organization information and you are good to go.
-6. `cd` into the `dev/concourse` directory and use the provided shell script to spin up Concourse
-
-    ```
-    cd dev/concourse
+    cd dev
     ./concourse-up.sh
     ```
 
-7. After a while, Concourse should open up in your browser. You can login to Concourse with user `test` and password `test`
+4. After a while, RocketChat should open up in your browser. You can login with user `admin` password `admin`
+5. Provide some organization information and you are good to go.
+6. After a while, Concourse should open up in your browser. You can login to Concourse with user `test` and password `test`
 
 
 > **Warning**: For convenience, this repository comes with a set of default keys used by Concourse. Make sure to re-create those keys if you want to run Concourse in a more production setup.
@@ -130,10 +123,11 @@ This section provides some information for those who want to join development on
 
 #### Generating Keys for Concourse
 
-Follow steps in https://concourse-ci.org/concourse-generate-key.html
+Follow steps in https://concourse-ci.org/concourse-generate-key.html - this is just a reminder of what I did to generate the keys:
 
 ```
-root@f39bb0c9da87:/usr/local/concourse/bin# cd /concourse-keys/
+# Inside the Concourse web container
+
 root@f39bb0c9da87:/concourse-keys# /usr/local/concourse/bin/concourse generate-key -t ssh -f ./worker_key
 wrote private key to ./worker_key
 wrote ssh public key to ./worker_key.pub

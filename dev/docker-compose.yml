@@ -1,4 +1,6 @@
-version: '2'
+# from https://github.com/concourse/concourse-docker/blob/master/docker-compose.yml
+
+version: '3'
 
 services:
   rocketchat:
@@ -11,7 +13,7 @@ services:
       - ./uploads:/app/uploads
     environment:
       - PORT=3000
-      - ROOT_URL=http://${ROOT_URL}:3000
+      - ROOT_URL=http://${ROCKETCHAT_URL}:3000
       - MONGO_URL=mongodb://mongo:27017/rocketchat
       - MONGO_OPLOG_URL=mongodb://mongo:27017/local
       #- Accounts_UseDNSDomainCheck=True
@@ -44,26 +46,50 @@ services:
     depends_on:
       - mongo
 
-#  # hubot, the popular chatbot (add the bot user first and change the password before starting this image)
-#  hubot:
-#    image: rocketchat/hubot-rocketchat:latest
-#    restart: unless-stopped
-#    environment:
-#      - ROCKETCHAT_URL=chat.dev.localhost:3000
-#      - ROCKETCHAT_ROOM=GENERAL
-#      - ROCKETCHAT_USER=bot
-#      - ROCKETCHAT_PASSWORD=botpassword
-#      - BOT_NAME=bot
-#      # you can add more scripts as you'd like here, they need to be installable by npm
-#      - EXTERNAL_SCRIPTS=hubot-help,hubot-seen,hubot-links,hubot-diagnostics
-#    depends_on:
-#      - rocketchat
-#    volumes:
-#      - ./scripts:/home/hubot/scripts
-#    # this is used to expose the hubot port for notifications on the host on port 3001, e.g. for hubot-jenkins-notifier
-#    ports:
-#      - 3001:8080
+  db:
+    image: postgres
+    networks:
+      - rocket-notify
+    environment:
+      POSTGRES_DB: concourse
+      POSTGRES_USER: concourse_user
+      POSTGRES_PASSWORD: concourse_pass
 
+  web:
+    image: concourse/concourse
+    networks:
+      - rocket-notify
+    command: web
+    links: [db]
+    depends_on: [db]
+    ports: ["8080:8080"]
+    volumes: ["./keys:/concourse-keys"]
+    environment:
+      CONCOURSE_EXTERNAL_URL: http://${CONCOURSE_FQDN}:8080
+      CONCOURSE_POSTGRES_HOST: db
+      CONCOURSE_POSTGRES_USER: concourse_user
+      CONCOURSE_POSTGRES_PASSWORD: concourse_pass
+      CONCOURSE_POSTGRES_DATABASE: concourse
+      CONCOURSE_ADD_LOCAL_USER: test:test
+      CONCOURSE_MAIN_TEAM_LOCAL_USER: test
+      CONCOURSE_SESSION_SIGNING_KEY: /concourse-keys/web/session_signing_key
+      CONCOURSE_TSA_HOST_KEY: /concourse-keys/web/tsa_host_key
+      CONCOURSE_TSA_AUTHORIZED_KEYS: /concourse-keys/worker/authorized_worker_keys
+
+  worker:
+    image: concourse/concourse
+    networks:
+    - rocket-notify
+    command: worker
+    privileged: true
+    depends_on: [web]
+    volumes: ["./keys:/concourse-keys"]
+    links: [web]
+    stop_signal: SIGUSR2
+    environment:
+      CONCOURSE_TSA_HOST: web:2222
+      CONCOURSE_TSA_PUBLIC_KEY: /concourse-keys/web/tsa_host_key.pub
+      CONCOURSE_TSA_WORKER_PRIVATE_KEY: /concourse-keys/worker/worker_key
 
 networks:
   rocket-notify:
