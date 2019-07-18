@@ -18,14 +18,11 @@ jobs:
             apk add bash
             bash -c 'version=$(git describe --tags); if [[ $version =~ ^[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+$ ]] ; then docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}; ./build.sh ${version} ${DOCKER_REPO}; fi'
 
-#workflows:
-#  version: 2
-#  build-push:
-#    jobs:
-#      - build
-#      - push:
-#          requires:
-#            - build
-#          filters:
-#            tags:
-#              only: /^\d+\.\d+\.\d+$/
+workflows:
+  version: 2
+  build:
+    jobs:
+      - build:
+          filters:
+            tags:
+              only: /.*/
