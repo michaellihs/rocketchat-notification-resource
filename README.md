@@ -15,6 +15,7 @@ The repository is based on a fork from [github.com/lucirr/rocketchat-notificatio
         - [The `resources.type:rocketchat.source` Section](#the-resourcestyperocketchatsource-section)
         - [The `jobs.plan.task.on_success|on_failure` section](#the-jobsplantaskon_successon_failure-section)
 - [Developer's Guide](#developers-guide)
+    - [Pusing a new resource Image to Docker Hub](#pusing-a-new-resource-image-to-docker-hub)
     - [Spinning up a local Development Environment with `docker-compose`](#spinning-up-a-local-development-environment-with-docker-compose)
         - [Generating Keys for Concourse](#generating-keys-for-concourse)
     - [Running the Tests](#running-the-tests)
@@ -94,6 +95,25 @@ Developer's Guide
 -----------------
 
 This section provides some information for those who want to join development on this resource.
+
+
+### Pusing a new resource Image to Docker Hub
+
+In case you want to build and push a new Docker image for the resource via our [Circle CI job](https://circleci.com/gh/michaellihs/rocketchat-notification-resource), to the following:
+
+1. Create an annotated tag with the new (semantic version)
+
+    ```bash
+    git tag -a 1.3.5 -m "version 1.3.5"
+    ```
+
+2. Push the tag to GitHub
+
+    ```bash
+    git push origin 1.3.5
+    ```
+
+Whenever CircleCI builds a commit that has a semantic version tag on it, it will automatically push the image to Docker Hub.
 
 
 ### Spinning up a local Development Environment with `docker-compose`
