@@ -22,9 +22,6 @@ repo=${2:-michaellihs}
 
 image_name='rocket-notify-resource'
 
-# tag first to make sure that tag doesn't exist (yet)
-git tag -a ${version} -m "Docker image version ${version}"
 docker build --no-cache -t ${image_name} .
 docker tag ${image_name} ${repo}/${image_name}:${version}
 docker push ${repo}/${image_name}:${version}
-git push origin --follow-tags
