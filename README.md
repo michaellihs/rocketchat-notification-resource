@@ -215,6 +215,7 @@ TODOs
 - [x] enable configuration of default channel in `resources.type:rocketchat.source`
 - [x] enable configuration of default alias in `resources.type:rocketchat.source`
 - [x] provide reasonable default message `Job 'rocketchat-notify' failed` with job name in title
+- [ ] inline Concourse avatar image in RocketChat notifications (currently references image on the internet)
 
 
 Resources
