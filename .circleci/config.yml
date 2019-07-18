@@ -10,26 +10,22 @@ jobs:
       - run:
           name: Build Docker Image
           command: docker build --no-cache -t rocketchat-notification-resource .
-  push:
-    working-directory: /docker-image
-    docker:
-      - image: docker:17.05.0-ce-git
-    steps:
       - deploy:
-          name: Push application Docker image
+          name: Push resource Docker image
           command: |
-            version=$(git describe --tags)
-            docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}
-            ./build.sh ${version} ${DOCKER_REPO}
+            apk update
+            apk upgrade
+            apk add bash
+            bash -c 'version=$(git describe --tags); if [[ $version =~ ^[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+$ ]] ; then docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}; ./build.sh ${version} ${DOCKER_REPO}; fi'
 
-workflows:
-  version: 2
-  build-push:
-    jobs:
-      - build
-      - push:
-          requires:
-            - build
-          filters:
-            tags:
-              only: /^\d+\.\d+\.\d+$/
+#workflows:
+#  version: 2
+#  build-push:
+#    jobs:
+#      - build
+#      - push:
+#          requires:
+#            - build
+#          filters:
+#            tags:
+#              only: /^\d+\.\d+\.\d+$/
