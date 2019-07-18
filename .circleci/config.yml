@@ -1,0 +1,21 @@
+version: 2
+jobs:
+  build:
+    working_directory: /docker-image
+    docker:
+      - image: docker:17.05.0-ce-git
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Build Docker Image
+          command: docker build --no-cache -t rocketchat-notification-resource .
+      - deploy:
+          name: Push application Docker image
+          filters:
+            tags:
+              only: /^\d+\.\d+\.\d+$/
+          command: |
+            version=$(git describe --tags)
+            docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}
+            ./build.sh ${version} ${DOCKER_REPO}
