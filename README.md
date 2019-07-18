@@ -1,7 +1,7 @@
 Concourse Resource for RocketChat Notifications
 ===============================================
 
-This project contains a Concourse Resource for sending notifications to RocketChat.
+A Concourse Resource for sending notifications to [RocketChat](https://rocket.chat/).
 
 The repository is based on a fork from [github.com/lucirr/rocketchat-notification-resource](https://github.com/lucirr/rocketchat-notification-resource).
 
